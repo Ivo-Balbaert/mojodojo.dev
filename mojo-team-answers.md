@@ -1,11 +1,9 @@
 
 # Mojo Team Answers
-The best place to learn about Mojo is [the official docs](https://docs.modular.com/mojo/), [why mojo?](https://docs.modular.com/mojo/why-mojo.html) will give more context to the answers below, and the [official FAQ](https://docs.modular.com/mojo/faq.html)
-
-These answers are collected from [Discord](https://discord.com/invite/modular), [Hackernews](https://news.ycombinator.com) and [Github](https://github.com/modularml/mojo/issues)
-
 To check when new answers are added, you can follow [This Week in Mojo](/this_week_in_mojo/)
 
+## Mojo Chatbot
+This chatbot is trained on the answers below if you want to get a quick summary of the answers to your question
 <iframe
   src="https://mojodojo.streamlit.app/?embed=true"
   height="450"
@@ -1309,4 +1307,5 @@ It integrates natively with Mojo 🔥 for a completely new high performance prog
 Our runtime is designed to be modular. It scales down very well, supports heterogenous configs, and scales up to distributed settings in a pretty cool way, we're excited to share more about this over time.
 
 <CommentService />
+
 

@@ -25,12 +25,12 @@ def retrieve_info(query):
 llm = ChatOpenAI(temperature=0, model="gpt-3.5-turbo-16k-0613")
 
 template = """
-You are a world class expert on a new programming language named "Mojo" developed by the company "Modular"
+You answer questions about a new programming language named "Mojo" developed by the company "Modular"
 
-Below is the question you've received from someone trying to learn about the language. Please answer the question in the best way possible:
+Below is the question you've received from someone trying to learn about the language. Please answer the question:
 {message}
 
-Here is a list of answers experts have given previously:
+Here is a list of answers the team have given previously:
 {answers}
 """
 
@@ -52,21 +52,18 @@ def main():
         page_icon=":fire:",
     )
 
-    st.header("Mojo Chatbot")
+    hide_footer_style = """
+    <style>
+    .reportview-container .main footer {visibility: hidden;}    
+    """
+    st.markdown(hide_footer_style, unsafe_allow_html=True)
+
     message = st.text_area("question")
 
     if message:
         st.write("Generating answer...")
         result = generate_response(message)
         st.info(result)
-
-    hide_streamlit_style = """
-                <style>
-                [data-testid="stToolbar"] {visibility: hidden !important;}
-                footer {visibility: hidden !important;}
-                </style>
-                """
-    st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
