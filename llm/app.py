@@ -10,7 +10,7 @@ import streamlit as st
 
 load_dotenv()
 
-documents = UnstructuredMarkdownLoader(file_path="mojo-team-answers.md", mode="elements").load()
+documents = UnstructuredMarkdownLoader(file_path="../mojo-team-answers.md", mode="elements").load()
 
 embeddings = OpenAIEmbeddings()
 db = FAISS.from_documents(documents, embeddings)
@@ -31,34 +31,42 @@ Below is the question you've received from someone trying to learn about the lan
 {message}
 
 Here is a list of answers experts have given previously:
-{best_practise}
+{answers}
 """
 
 prompt = PromptTemplate(
-    input_variables=["message", "best_practise"],
+    input_variables=["message", "answers"],
     template=template,
 )
 
 chain = LLMChain(llm=llm, prompt=prompt)
 
 def generate_response(message):
-    best_practise = retrieve_info(message)
-    response = chain.run(message=message, best_practise=best_practise)
+    answers = retrieve_info(message)
+    response = chain.run(message=message, answers=answers)
     return response
 
 def main():
     st.set_page_config(
-        page_title="Mojo Team Answers",
+        page_title="Mojo Chatbot",
         page_icon=":fire:",
     )
 
-    st.header("Mojo :fire: Team LLM")
+    st.header("Mojo Chatbot")
     message = st.text_area("question")
 
     if message:
         st.write("Generating answer...")
         result = generate_response(message)
         st.info(result)
+
+    hide_streamlit_style = """
+                <style>
+                [data-testid="stToolbar"] {visibility: hidden !important;}
+                footer {visibility: hidden !important;}
+                </style>
+                """
+    st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
