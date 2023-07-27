@@ -5,7 +5,7 @@
 base="dark"
 
 # Primary accent color for interactive elements.
-primaryColor="#65a308"
+primaryColor="#adbac7"
 
 # Background color for the main content area.
 backgroundColor="#262725"
@@ -14,7 +14,7 @@ backgroundColor="#262725"
 secondaryBackgroundColor="#262725"
 
 # Color used for almost all text.
-textColor="#65a308"
+textColor="#adbac7"
 
 # Font family for all text in the app, except code blocks. One of "sans serif",
 # "serif", or "monospace".

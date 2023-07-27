@@ -1,14 +1,20 @@
-
 # Mojo Team Answers
 To check when new answers are added, you can follow [This Week in Mojo](/this_week_in_mojo/)
 
 ## Mojo Chatbot
-This chatbot is trained on the answers below if you want to get a quick summary of the answers to your question
+Ask a question to get back a quick response based on the answers below, using ChatGPT 3.5
+
+<div>
+<div
+    style="position:relative;height:0;overflow:hidden;padding-bottom:80%;border:none;"
+>
 <iframe
-  src="https://mojodojo.streamlit.app/?embed=true"
-  height="450"
-  style="width:100%;border:none;"
+    src="https://mojodojo.streamlit.app/?embed=true"
+    height="300"
+    style="position:absolute;top:0;left:0;width:100%;height:125%;border:none;"
 ></iframe>
+</div>
+</div>
 
 ## Language Features
 
