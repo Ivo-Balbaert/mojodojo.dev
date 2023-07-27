@@ -10,7 +10,7 @@ import streamlit as st
 
 load_dotenv()
 
-documents = UnstructuredMarkdownLoader(file_path="../mojo-team-answers.md", mode="elements").load()
+documents = UnstructuredMarkdownLoader(file_path="mojo-team-answers.md", mode="elements").load()
 
 embeddings = OpenAIEmbeddings()
 db = FAISS.from_documents(documents, embeddings)
