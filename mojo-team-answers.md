@@ -1,20 +1,14 @@
+---
+head:
+  - [meta, { name: twitter:card , content: summary }]
+  - [meta, { name: twitter:site , content: '@mojodojodev' }]
+  - [meta, { name: twitter:title , content: Mojo Team Answers }]
+  - [meta, { name: twitter:description , content: "Answers from various team members about the Mojo language and Modular" }]
+  - [meta, { name: twitter:image , content: "https://mojodojo.dev/hero.png" }]
+---
+
 # Mojo Team Answers
 To check when new answers are added, you can follow [This Week in Mojo](/this_week_in_mojo/)
-
-## Mojo Chatbot
-Ask a question to get back a quick response based on the answers below, using ChatGPT 3.5
-
-<div>
-<div
-    style="position:relative;height:0;overflow:hidden;padding-bottom:80%;border:none;"
->
-<iframe
-    src="https://mojodojo.streamlit.app/?embed=true"
-    height="300"
-    style="position:absolute;top:0;left:0;width:100%;height:125%;border:none;"
-></iframe>
-</div>
-</div>
 
 ## Language Features
 
@@ -84,12 +78,11 @@ We support the existing Python raise/try syntax, and also support with blocks et
 We will also support an optional + result type as well for the usecases that benefit from it, e.g. functional patterns, although we are missing some support in the generics system to do that right now.
 
 Mojo doesn't actually have exceptions (stack unwinding, etc). Our error handling is like Rust's error handling, except sugared `fn foo() raises -> Int:` actually returns an `ErrorOr<Int>` type and the parser generates automatic error propagation, etc.
-
 ```mojo
 try:
-  mightRaise()
+mightRaise()
 except e:
-  print(e)
+print(e)
 ```
 
 is the same as
@@ -97,7 +90,7 @@ is the same as
 ```mojo
 maybeErr = mightRaise()
 if maybeErr.isError():
-  print(maybeErr.getError())
+print(maybeErr.getError())
 ```
 
 We're not impressed with how the swift `marked propagation` stuff worked out. The `try` thing (besides being the wrong keyword) was super verbose for things that required lots of fallible calls, e.g. encoders and decoders and it isn't clear that the ambiguity we were afraid of was actually a thing.  We'll certainly explore that in the future, but for now we should try to just keep things simple and bring up the stack end to end imo.
@@ -376,9 +369,9 @@ Also, "let" values are not aliases. They've very different. A let isn't mutable 
 ```
 let x : Int 
 if cond:
-    x = foo()
+x = foo()
 else:
-    x = bar()
+x = bar()
 use(x)
 ```
 
@@ -425,7 +418,7 @@ User defined statement blocks, e.g.:
 
 ```python
 parallel_loop(42):
-    stuff()
+stuff()
 ```
 
 User defined statements are a nice way to shift more language syntax into the library, but are just syntactic sugar and will require a little more infra to get wired up. For example, I would like "return" in that context to return from the enclosing function (not from the lambda), and things like break to work for loop-like constructs. This is quite possible to wire up, but will require a bit of design work.
@@ -624,7 +617,7 @@ It's kind of tricky because the implementation of LSP is generally heavily tied 
 This is effectively how the Mojo compiler works internally, and we fudge a couple of things for sake of simplicity of model. For example, the `self` member of a `__del__` destructor is a reference, but it is "magic" in that it is required to be live-in and uninit-out. The self for a memory-only `__init__` has the opposite polarity, being uninit on entry and init on exit.
 
 - [2023-07-04 Github Chris Lattner](https://github.com/modularml/mojo/issues/372#issuecomment-1619181242)
- 
+
 ### Multiple Moves with `^`
 The `^` operator kills a lifetime or invokes the stealing moveinit, producing a new owned RValue, so `^^^` is just repeatedly moving 🙂. It is probably a noop in the implementation because we do move elision, I haven't checked though.
 
@@ -663,14 +656,14 @@ Global variables were added to the language but they have not been wired into th
 The way to do this is by explicitly calling the bool method later:
 ```mojo
 struct MyPair:
-    var first: Float32
-    var second: Float32
+var first: Float32
+var second: Float32
 
-    fn __lt__(self, rhs: MyPair) -> Bool:
-        return (
-            self.first < rhs.first
-            or (self.first == rhs.first and self.second < rhs.second)
-        ).__bool__()
+fn __lt__(self, rhs: MyPair) -> Bool:
+    return (
+        self.first < rhs.first
+        or (self.first == rhs.first and self.second < rhs.second)
+    ).__bool__()
 ```
 
 We could add `SIMD[DType.bool, 1]` as an initializer to the `Bool` type, but cannot do that currently because `Bool` is a builtin type while `SIMD` is not. We need to think about this and have a library-based solution.
@@ -698,6 +691,40 @@ Sure, that algorithm could definitely be used inside the Mojo sort algorithm.  W
 
 - [2023-06-12 Discord Chris Lattner](https://discord.com/channels/1087530497313357884/1103420074372644916/1117497920678285332)
 
+### Loop Unrolling
+These are two loop decorators to tell the compiler to unroll a loop, see [wikipedia loop unrolling](https://en.wikipedia.org/wiki/Loop_unrolling). This doesn't impact the functionality of the loops, but potentially can help for better performance since it opens possibility for further compiler optimizations.
+
+Fully unroll the loop's 10 iterations into 10 `do_something` calls and remove the for-loop:
+```mojo
+@unroll 
+for i in range(10):
+  do_something(i)
+```
+
+Unroll every 2 iterations and loop over 5 times:
+```mojo
+@unroll(2)
+for i in range (10):
+  do_something(i)
+```
+This decorator can be attached to while statement too.
+
+Note that currently the compiler can only unroll a loop:
+
+- Its lower bound, upper bound and induction variable step every iteration are compile time constants
+- There is no early exits in the loop body that makes the loop trip count dynamic during runtime.
+
+Otherwise, Compilation fails if a loop is decorated with `@unroll`
+
+Here is a brief description of these two decorators in [Mojo changelog on 2023-07-26](https://docs.modular.com/mojo/changelog.html#july-2023).
+
+[Functional.unroll](https://docs.modular.com/mojo/MojoStdlib/Functional.html#unroll) performs the same loop unrolling functionality as library functions. There are a few differences between using library function of unroll and decorator `@unroll`` are:
+
+- Library function call requires the induction variable to be a parameter while the decorator uses the induction variable as a dynamic variable.
+- Library function call unroll the loop so that the program the compiler starts to compile is with unrolled code. The can potentially increase the amount of code to compile depends on the amount to unroll.
+- Decorator unrolling happens at later stage of compilation which prevents program explosion too early.
+
+-[2023-07-28 Github Weiwei Chen](https://github.com/modularml/mojo/discussions/482#discussioncomment-6581104)
 
 ## Language comparisons
 [Why we chose to write a new language](https://docs.modular.com/mojo/why-mojo.html)
@@ -1317,6 +1344,16 @@ It integrates natively with Mojo 🔥 for a completely new high performance prog
 ### Runtime
 Our runtime is designed to be modular. It scales down very well, supports heterogenous configs, and scales up to distributed settings in a pretty cool way, we're excited to share more about this over time.
 
-<CommentService />
 
+## Mojo Chatbot
+Ask a question to get back a quick response based on the answers above, using ChatGPT 3.5
+
+<iframe
+src="https://mojodojo.streamlit.app/?embed=true"
+  height="450"
+  style="width:100%;border:none;"
+>
+</iframe>
+
+<CommentService />
 
