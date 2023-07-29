@@ -1044,6 +1044,11 @@ We provide integers, floats, buffers, tensors and other things you'd expect in a
 
 - [2023-06-02 Lex Fridman Interview 42:02](https://youtu.be/pdJQ8iVTwj8?t=2522)
 
+### JSON Parser
+JSON is super important, but right now we are tracking more basic things, e.g. getting core data structures in place. Higher level libraries like this should likely be part of the broader package ecosystem, and we need packages before we plan that 😃.
+
+- [2023-07-29 Github Chris Lattner](https://github.com/modularml/mojo/issues/478#issuecomment-1654623649)
+
 ### Rewriting Libraries 
 In the case of modular and why we built Mojo, our business objective is go make ML really awesome, we care about the matrix multiplications and the convolutions and the core operations that people spend all their time on in AI. And so we rewrote all of that stuff in Mojo, this isn't like rewriting Matplotlib, this is like rewriting Intel MKL, or the CUDA implementation of these CUDA kernels equivalent. That's where we've put our energy into
 because that's what enables unlocking of the hardware, performance, and usability.
