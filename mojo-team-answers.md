@@ -726,6 +726,15 @@ Here is a brief description of these two decorators in [Mojo changelog on 2023-0
 
 -[2023-07-28 Github Weiwei Chen](https://github.com/modularml/mojo/discussions/482#discussioncomment-6581104)
 
+### Python PEP 703 - Optional Global Interpreter Lock
+It should be strictly compatible with Mojo's use of CPython and I think it is a good move for the Python ecosystem in general. I'm seeing a lot of folks that seem to be declaring success early, my read of PEP703 is that there is still a lot of work to do to figure things out and land things. The [Python core team summary](https://discuss.python.org/t/a-steering-council-notice-about-pep-703-making-the-global-interpreter-lock-optional-in-cpython/30474) is really great and I highly recommend reading it. It seems like the transition will take a few years. I'm personally very curious how heavy users of CPython internals (e.g. TensorFlow and PyTorch) will handle the transition - the changes are pretty profound, breaking core C APIs like `PyList_GetItem`.
+
+Also my read of the code in the implementation seems that they may need to iterate a bit. One of the core operations in the critical path for performance is `_Py_ThreadId` and my read of it is that it will break code that uses thread local storage for other things by directly scribbling into it in a [very low-level way](https://github.com/colesbury/nogil/blob/f7e45d6bfbbd48c8d5cf851c116b73b85add9fc6/Include/object.h#L428-L455)
+
+That said, there are a ton of crazy smart people working on this and everyone seems highly motivated. Overall, it's a great step forward for the ecosystem in any case in my opinion.
+
+- [2023-07-31 Discord Chris Lattner](https://discord.com/channels/1087530497313357884/1135312969664843846/1135332933805285457)
+
 ## Language comparisons
 [Why we chose to write a new language](https://docs.modular.com/mojo/why-mojo.html)
 ### Julia
