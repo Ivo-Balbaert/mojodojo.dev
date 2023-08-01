@@ -31,7 +31,7 @@ call_it()
     
     expression failed to parse (no further compiler diagnostics)
 
-You can fixing it by adding the `capturing` keyword:
+You can fix it by adding the `capturing` keyword:
 
 
 ```mojo
@@ -69,5 +69,27 @@ call_it()
 
     inner
 
+
+To give you a sense of what capturing is in a closure, let's take a look:
+
+
+```mojo
+fn outer(f: fn() capturing -> Int):
+    print(f())
+
+fn call_it():
+    let a = 5 
+    fn inner() -> Int:
+        return a
+
+    outer(inner) 
+
+call_it()
+```
+
+    5
+
+
+You can see that we captured the `a` variable in the inner closure and returned it to the outer function
 
 <CommentService />
