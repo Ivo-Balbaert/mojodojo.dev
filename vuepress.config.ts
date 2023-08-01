@@ -80,6 +80,7 @@ export default defineUserConfig({
                                     '/guides/decorators/register_passable.md',
                                     '/guides/decorators/parameter.md',
                                     '/guides/decorators/always_inline.md',
+                                    '/guides/decorators/noncapturing.md',
                                 ]
                             },
                             {
