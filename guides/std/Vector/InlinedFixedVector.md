@@ -1,12 +1,11 @@
 ---
-title: InlinedFixedVector
 categories: Vector
 usage: Contains a statically known vector size, but can also grow dynamically at runtime
 ---
 
 Contributed by [Alex1957](https://github.com/Alex19578)
 
-# DynamicVector
+# InlinedFixedVector
 ## import
 
 

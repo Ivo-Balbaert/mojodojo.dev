@@ -3,9 +3,9 @@ usage: Marks a closure as not capturing variables from the outer scope
 ---
 
 # @noncapturing
-Marks a closure as not capturing variables from the outer scope
+Marks a closure as not capturing variables from the outer scope.
 
-Mojo considers the closures capturing by default, even if it's not capturing anything, for example if you don't put the `capturing` keyword after `fn()` you'll get a compiler error:
+Mojo considers closures capturing by default, even if it's not capturing anything, for example if you don't put the `capturing` keyword after `fn()` you'll get a compiler error:
 
 
 ```mojo
