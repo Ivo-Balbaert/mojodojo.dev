@@ -26,7 +26,7 @@ While it aims to be a stepping stone from Python to Mojo, unique Python concepts
 - Fill out the form, tick Mojo and press submit
 - In a few days you'll get an email with a button `Access the Mojo Playground`
 - If you want to access the playground from VS Code [follow this guide](/guides/general/mojo_playground_vscode.md)
-- You can download these notebooks to run them locally [via Github](https://github.com/mojodojodev/mojodojo.dev/tree/main/guides/intro_to_mojo) 
+- You can download these notebooks to run them locally [via Github](https://github.com/mojodojodev/mojodojo.dev/tree/main/guides/intro-to-mojo) 
 
 ## Links
 - Join [the Modular Discord](https://discord.gg/modular)
