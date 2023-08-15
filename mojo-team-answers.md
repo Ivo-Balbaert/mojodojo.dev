@@ -331,6 +331,13 @@ At the end of the day, we also want `fn` and `def` to be friends and get along a
 
 - [2023-07-18 Github Chris Lattner](https://github.com/modularml/mojo/issues/452#issuecomment-1639473356)
 
+### Null Pointers
+We are definitely interested in introducing an `Option[T]` / `Optional[T]` type in the future, but need more traits support built out. Once we have that, we can shift to non-nullable "pointers" by default.
+
+- [2023-08-10 Github Chris Lattner](https://discord.com/channels/1087530497313357884/1138854784930172928/1138902579640807566)
+
+
+
 ## Syntax 
 ### Syntactic Sugar
 Syntactic sugar is fun and exciting, but we want to avoid this after learning the hard way from Swift that it distracts from building the core abstractions for the language, and we want to be a good member of the Python community so we can evolve Mojo alongside Python. We'd prefer to avoid it complely dding any additional syntax
@@ -735,7 +742,7 @@ That said, there are a ton of crazy smart people working on this and everyone se
 
 - [2023-07-31 Discord Chris Lattner](https://discord.com/channels/1087530497313357884/1135312969664843846/1135332933805285457)
 
-## Language comparisons
+## Comparisons
 [Why we chose to write a new language](https://docs.modular.com/mojo/why-mojo.html)
 ### Julia
 I think Julia is a great language with a lovely community, but it's a different angle to Mojo, our goal is to take something great in Python and make it even better, so programmers don't have to learn an entirely new language. It is aligned with the Python community to solve [specific problems outlined here](https://docs.modular.com/mojo/why-mojo.html)
@@ -809,6 +816,11 @@ But one big difference is that Mojo is a full language, includes a debugger and 
 Triton is more of a specialized programming model for one (important) kind of accelerator, and is not even fully general/expressive for what GPUs can do
 
 Honestly, I'm not an expert in Triton, nor with the issues you're mentioning. I'm not sure what happened there.
+
+### ONNX Runtime
+we run benchmarks against ONNX Runtime, and in our tests, the Modular AI Engine is almost always faster than it. We may add these numbers to the public dashboard at https://performance.modular.com/ in the future.
+
+- [2023-08-14 Alex Kirchhoff](https://discord.com/channels/1087530497313357884/1140700862524690632/1140733786414399608)
 
 ### CPython compilers
 Correct, we put no effort into trying to make CPython go faster - other folks are doing that, and we compose on top of it. If you want the benefits of mojo you move your code into the mojo world. We're prioritizing "simple and predictable" programming models
@@ -1011,6 +1023,7 @@ Mojo references are currently second class exactly as [Graydon advocates](https:
 - [2023-06-14 Discord Chris Lattner](https://discord.com/channels/1087530497313357884/1098713601386233997/1118249300405780541)
 
 ## General
+
 ### Modular monetization 
 The engine itself can stand alone and you can use the engine as a drop-in replacement for running TensorFlow and PyTorch models in production. And so TensorFlow is quite good at production, but we're showing 3-5x better performance on, for example Intel CPUs, AMD CPUs or an ARM-based Graviton server in AWS. That's a massive cost savings and it's also a massive latency improvement, so many of our customers love that because then they can turn around and make their models bigger, which is a huge deal for them.
 
@@ -1231,6 +1244,24 @@ Yep, Mojo has a bunch of dialects internally, but they aren't intended for use b
 We reached out to individuals we identified ourselves this time. In the future as the server scales, if we look to add more, we will probably send out an application form that folks can fill out and we'll review on a rolling basis. 
 
 [2023-06-09 Discord Andrew](https://discord.com/channels/1087530497313357884/1116515673611448352/1116528356603736084)
+
+### Linear algebra in standard library
+We need to figure it out, but I'd prefer to keep the stdlib pretty conventional and focused on "normal" library types like integers, strings, dictionaries, pushing things like tensors and matmul out to a linear algebra package (e.g. see Numpy not being built in).  That said, I do think something like that could/should be included in the normal distro.
+
+The Modular Engine will be different, and I expect/hope it to always be the best state of the art implementation of this stuff, but it can do so without trying to hold back other efforts!
+
+- [2023-08-08 Discord Chris Lattner](https://discord.com/channels/1087530497313357884/1138051611936178228/1138176785087987773)
+
+### Standard Library `Tensor`
+The `Tensor` type is new but is also very much a work in progress. We added it because a lot of example notebooks are using very low level programming (effectively malloc+free) and need a simple owned buffer type. The initial idea is that "array like" names would work with arbitrary element types (e.g. you can put a 🐴 or 🐶 object in an array) but that we wanted a more "numerics sounding" collection that would be parameterized on DType.
+
+Mojo is still missing a bunch of type systems features (e.g. traits etc) that will massively impact the shape and structure of the standard library, and as those come in, we'll want to significantly rethink previous decisions.  Despite that, we don't want to completely hold back progress on things until all those features are available - we decided it is better to prototype some things, get experience, and be willing to reinvent / replace things over time.
+
+- [2023-08-08 Discord Chris Lattner](https://discord.com/channels/1087530497313357884/1138051611936178228/1138156214983860264)
+
+### Why not build Mojo on top of Swift?
+I'm also a fan of Swift. The major issue with it is that it isn't a member of the Python family. I'm confused why you think that Mojo isn't inspired by Swift, because Mojo certainly is. That said, you're right that building a new thing takes longer than leveraging an existing thing. The reason we're taking this approach is that we're optimizing for quality of result (we want to build the world's best thing) not time to market. I would consider it success if you come to love Mojo more than Swift some day 😄
+- [2023-08-07 Github Chris Lattner](https://github.com/modularml/mojo/discussions/485#discussioncomment-6647832)
 
 ## Hardware and accelerators
 ### GPUs
