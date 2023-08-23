@@ -47,8 +47,8 @@ raise custom_err
 
 
 ```mojo
-var ref : StringRef = StringRef("hello")
-var err : Error = Error(ref)
+var ref1 : StringRef = StringRef("hello")
+var err : Error = Error(ref1)
 
 raise err
 ```
